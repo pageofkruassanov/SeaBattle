@@ -40,6 +40,7 @@ void MyMap::Map::DisplayMap(bool hideShips) const
 		}
 	}
 	else {
+		char emptyPlace = ' ';
 		coordCursor.X = coordX;
 		coordCursor.Y = coordY;
 		for (int i = 0; i < mapSize; i++) {
@@ -47,7 +48,7 @@ void MyMap::Map::DisplayMap(bool hideShips) const
 			SetConsoleCursorPosition(hConsole, coordCursor);
 			for (int j = 0; j < mapSize; j++) {
 				if (board[i][j] == 'B')
-					std::cout << " ";
+					std::cout << emptyPlace;
 				else {
 					std::cout << board[i][j];
 				}
@@ -119,13 +120,14 @@ void MyMap::Map::reservePlace(std::pair<int, int> pointFrom, std::pair<int, int>
 	int tempX = pointFrom.first;
 	do {
 		if (pointFrom.first == pointTo.first) {
+			reservedPlace.push_back(pointFrom);
 			pointFrom.second++;
 			pointFrom.first = tempX;
 		}
 		reservedPlace.push_back(pointFrom);
 		pointFrom.first++;
 		
-	} while (pointFrom != pointTo);
+	} while (pointFrom < pointTo);
 }
 
 std::vector<std::pair<int, int>>& MyMap::Map::getReservedPlace()
@@ -135,20 +137,19 @@ std::vector<std::pair<int, int>>& MyMap::Map::getReservedPlace()
 
 bool MyMap::Map::isReservedPlace(std::vector<std::pair<int, int>> ships, std::vector<std::pair<int, int>> reservedPlace)
 {
-	bool isResPl = 0;
 	for (int i = 0; i < ships.size(); i++) {
 		for (int j = 0; j < reservedPlace.size(); j++) {
 			if (ships[i] == reservedPlace[j])
-				isResPl = 1;
+				return true;
 		}
 	}
-	return isResPl;
+	return false;
 }
 
 bool MyMap::Map::checkShip(std::vector<std::pair<int, int>> ship)
 {
-	if (ship.size() < 3)
-		return true;
+	if (ship.size() > 4 || ship.size() < 1)
+		return false;
 	bool isX = 0, isY = 0;
 	int X = ship[0].first;
 	int Y = ship[0].second;

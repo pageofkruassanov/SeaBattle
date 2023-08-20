@@ -31,10 +31,119 @@ void Player::makeMove(std::string position, Map& map)
 		map.getBoard()[X][Y] = 'X';
 }
 
+void Player::setShips(Map& map,const int MAX_SIZE_SHIP)
+{
+	int amountTypeShips = 0;
+	const int minCoord = 0;
+	const int maxCoord = 9;
+	std::vector<std::pair<int, int>> tempShip;
+	
+	do {
+		tempShip = createRandomShip(MAX_SIZE_SHIP - amountTypeShips, minCoord, maxCoord);
+	} while (map.isReservedPlace(tempShip, map.getReservedPlace()));
+	for (int i = 0; i < MAX_SIZE_SHIP - amountTypeShips; i++) {
+		map.getShips().push_back(tempShip[i]);
+	}
+	map.reservePlace(map.findSmallerPoint(tempShip), map.findLargestPoint(tempShip), map.getReservedPlace());
+	tempShip.clear();
+	++amountTypeShips;
+
+	for (int i = 0; i < amountTypeShips + 1; i++) {
+		do {
+			tempShip = createRandomShip(MAX_SIZE_SHIP - amountTypeShips, minCoord, maxCoord);
+		} while (map.isReservedPlace(tempShip, map.getReservedPlace()));
+		for (int i = 0; i < MAX_SIZE_SHIP - amountTypeShips; i++) {
+			map.getShips().push_back(tempShip[i]);
+		}
+		map.reservePlace(map.findSmallerPoint(tempShip), map.findLargestPoint(tempShip), map.getReservedPlace());
+		tempShip.clear();
+	}
+
+	++amountTypeShips;
+	for (int i = 0; i < amountTypeShips + 1; i++) {
+		do {
+			tempShip = createRandomShip(MAX_SIZE_SHIP - amountTypeShips, minCoord, maxCoord);
+		} while (map.isReservedPlace(tempShip, map.getReservedPlace()));
+		for (int i = 0; i < MAX_SIZE_SHIP - amountTypeShips; i++) {
+			map.getShips().push_back(tempShip[i]);
+		}
+		map.reservePlace(map.findSmallerPoint(tempShip), map.findLargestPoint(tempShip), map.getReservedPlace());
+		tempShip.clear();
+	}
+
+	++amountTypeShips;
+	for (int i = 0; i < amountTypeShips + 1; i++) {
+		do {
+			tempShip = createRandomShip(MAX_SIZE_SHIP - amountTypeShips, minCoord, maxCoord);
+		} while (map.isReservedPlace(tempShip, map.getReservedPlace()));
+		for (int i = 0; i < MAX_SIZE_SHIP - amountTypeShips; i++) {
+			map.getShips().push_back(tempShip[i]);
+		}
+		map.reservePlace(map.findSmallerPoint(tempShip), map.findLargestPoint(tempShip), map.getReservedPlace());
+		tempShip.clear();
+	}
+	map.RefreshBoard();
+
+}
+
+std::vector<std::pair<int, int>> Player::createRandomShip(const int MAX_SIZE, int minCoord, int maxCoord)
+{
+	srand(time(0));
+	bool isVertical = rand() % 2;
+
+	std::vector<std::pair<int, int>> ship;
+	if (isVertical) {
+		std::pair<int, int> firstCoord;
+		firstCoord.first = minCoord + rand() % (maxCoord - minCoord + 1);
+		firstCoord.second = minCoord + rand() % (maxCoord - minCoord + 1);
+		ship.push_back(firstCoord);
+		if (ship[0].first + MAX_SIZE > maxCoord) {
+			for (int i = 1; i < MAX_SIZE; i++) {
+				std::pair<int, int> tempShip;
+				tempShip.first = ship[0].first - i;
+				tempShip.second = ship[0].second;
+				ship.push_back(tempShip);
+			}
+		}
+		else {
+			for (int i = 1; i < MAX_SIZE; i++) {
+				std::pair<int, int> tempShip;
+				tempShip.first = ship[0].first + i;
+				tempShip.second = ship[0].second;
+				ship.push_back(tempShip);
+			}
+		}
+	}
+	else {
+		std::pair<int, int> firstCoord;
+		firstCoord.first = minCoord + rand() % (maxCoord - minCoord + 1);
+		firstCoord.second = minCoord + rand() % (maxCoord - minCoord + 1);
+		ship.push_back(firstCoord);
+		if (ship[0].second + MAX_SIZE > maxCoord) {
+			for (int i = 1; i < MAX_SIZE; i++) {
+				std::pair<int, int> tempShip;
+				tempShip.first = ship[0].first;
+				tempShip.second = ship[0].second - i;
+				ship.push_back(tempShip);
+			}
+		}
+		else {
+			for (int i = 1; i < MAX_SIZE; i++) {
+				std::pair<int, int> tempShip;
+				tempShip.first = ship[0].first;
+				tempShip.second = ship[0].second + i;
+				ship.push_back(tempShip);
+			}
+		}
+	}
+	return ship;
+
+}
+
 void Player::setShips(std::vector<std::pair<int,int>> ship, Map& map) {
 	if (map.isReservedPlace(ship, map.getReservedPlace()))
 		throw std::exception("Error / Reserved Place / .. / isReservedPlace");
-	if (!map.checkShip(ship))
+	else if (!map.checkShip(ship))
 		throw std::exception("Error / Ship coords not correct / .. / checkShip");
 	int tempSize = ship.size();
 	for (int i = 0; i < tempSize; i++) {
