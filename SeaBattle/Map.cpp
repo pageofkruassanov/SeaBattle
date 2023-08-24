@@ -124,8 +124,13 @@ void MyMap::Map::reservePlace(std::pair<int, int> pointFrom, std::pair<int, int>
 			pointFrom.second++;
 			pointFrom.first = tempX;
 		}
-		reservedPlace.push_back(pointFrom);
-		pointFrom.first++;
+		else {
+			reservedPlace.push_back(pointFrom);
+			pointFrom.first++;
+		}
+		if (pointFrom == pointTo) {
+			reservedPlace.push_back(pointFrom);
+		}
 		
 	} while (pointFrom < pointTo);
 }

@@ -2,7 +2,7 @@
 
 // not end:
 
-void Player::makeMove(std::string position, Map& map)
+bool Player::makeMove(std::string position, Map& map)
 {
 	if (position.length() > 2 || position.length() < 2)
 		throw std::exception("Error /Length position input/ makeMove");
@@ -25,10 +25,14 @@ void Player::makeMove(std::string position, Map& map)
 	if (Y == -1 || Y < 0 || Y > 9)
 		throw std::exception("Error /coord X/ makeMove");
 
-	if (map.getBoard()[X][Y] == ' ')
+	if (map.getBoard()[X][Y] == ' ') {
 		map.getBoard()[X][Y] = '*';
-	else if (map.getBoard()[X][Y] == 'B')
+		return false;
+	}
+	else if (map.getBoard()[X][Y] == 'B') {
 		map.getBoard()[X][Y] = 'X';
+		return true;
+	}
 }
 
 void Player::setShips(Map& map,const int MAX_SIZE_SHIP)
