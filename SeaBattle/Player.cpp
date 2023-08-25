@@ -25,12 +25,19 @@ bool Player::makeMove(std::string position, Map& map)
 	if (Y == -1 || Y < 0 || Y > 9)
 		throw std::exception("Error /coord X/ makeMove");
 
+	for (int i = 0; i < pastMoves.size(); i++)
+		if (pastMoves[i].first == X && pastMoves[i].second == Y)
+			throw std::exception("Error/ You've been to this place before! / makeMove");
+
 	if (map.getBoard()[X][Y] == ' ') {
 		map.getBoard()[X][Y] = '*';
+		pastMoves.push_back(std::make_pair(X, Y));
 		return false;
 	}
 	else if (map.getBoard()[X][Y] == 'B') {
 		map.getBoard()[X][Y] = 'X';
+		points += 10;
+		pastMoves.push_back(std::make_pair(X, Y));
 		return true;
 	}
 }
@@ -88,6 +95,16 @@ void Player::setShips(Map& map,const int MAX_SIZE_SHIP)
 	}
 	map.RefreshBoard();
 
+}
+
+std::string Player::getName()
+{
+	return name;
+}
+
+int Player::getPoints()
+{
+	return points;
 }
 
 std::vector<std::pair<int, int>> Player::createRandomShip(const int MAX_SIZE, int minCoord, int maxCoord)

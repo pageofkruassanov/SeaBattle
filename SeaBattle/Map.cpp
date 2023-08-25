@@ -1,22 +1,21 @@
 #include "Map.h"
 
-using namespace MyMap;
 int Map::mapSize = 10;
-char MyMap::Map::getLetters(int index)
+char Map::getLetters(int index)
 {
 	return letters[index];
 }
-int MyMap::Map::getMapSize()
+int Map::getMapSize()
 {
 	return mapSize;
 }
-void MyMap::Map::DisplayMap(bool hideShips) const
+void Map::DisplayMap(bool hideShips) const
 {
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	COORD coordCursor;
 	coordCursor.X = coordX;
 	coordCursor.Y = coordY;
-
+	
 	coordCursor.Y--;
 	SetConsoleCursorPosition(hConsole, coordCursor);
 	for (int i = 0; i < mapSize; i++)
@@ -57,24 +56,24 @@ void MyMap::Map::DisplayMap(bool hideShips) const
 	}
 }
 
-char** MyMap::Map::getBoard()
+char** Map::getBoard()
 {
 	return board;
 }
 
-std::vector<std::pair<int, int>>& MyMap::Map::getShips()
+std::vector<std::pair<int, int>>& Map::getShips()
 {
 	return ships;
 }
 
-void MyMap::Map::RefreshBoard()
+void Map::RefreshBoard()
 {
 	for (int i = 0; i < ships.size(); i++) {
 		board[ships[i].first][ships[i].second] = 'B';
 	}
 }
 
-std::pair<int, int> MyMap::Map::findLargestPoint(std::vector<std::pair<int, int>>& ship) const
+std::pair<int, int> Map::findLargestPoint(std::vector<std::pair<int, int>>& ship) const
 {
 	if (ship.size() == 0)
 		throw std::exception("Error / Ship empty / findLargestPoint");
@@ -90,7 +89,7 @@ std::pair<int, int> MyMap::Map::findLargestPoint(std::vector<std::pair<int, int>
 	}
 }
 
-std::pair<int, int> MyMap::Map::findSmallerPoint(std::vector<std::pair<int, int>>& ship) const
+std::pair<int, int> Map::findSmallerPoint(std::vector<std::pair<int, int>>& ship) const
 {
 	if (ship.size() == 0)
 		throw std::exception("Error / Ship empty / findLargestPoint");
@@ -106,7 +105,7 @@ std::pair<int, int> MyMap::Map::findSmallerPoint(std::vector<std::pair<int, int>
 	}
 }
 
-void MyMap::Map::reservePlace(std::pair<int, int> pointFrom, std::pair<int, int> pointTo, std::vector<std::pair<int, int>>& reservedPlace)
+void Map::reservePlace(std::pair<int, int> pointFrom, std::pair<int, int> pointTo, std::vector<std::pair<int, int>>& reservedPlace)
 {
 	if (pointFrom.first > 0)
 		pointFrom.first--;
@@ -135,12 +134,12 @@ void MyMap::Map::reservePlace(std::pair<int, int> pointFrom, std::pair<int, int>
 	} while (pointFrom < pointTo);
 }
 
-std::vector<std::pair<int, int>>& MyMap::Map::getReservedPlace()
+std::vector<std::pair<int, int>>& Map::getReservedPlace()
 {
 	return reservedPlace;
 }
 
-bool MyMap::Map::isReservedPlace(std::vector<std::pair<int, int>> ships, std::vector<std::pair<int, int>> reservedPlace)
+bool Map::isReservedPlace(std::vector<std::pair<int, int>> ships, std::vector<std::pair<int, int>> reservedPlace)
 {
 	for (int i = 0; i < ships.size(); i++) {
 		for (int j = 0; j < reservedPlace.size(); j++) {
@@ -151,7 +150,7 @@ bool MyMap::Map::isReservedPlace(std::vector<std::pair<int, int>> ships, std::ve
 	return false;
 }
 
-bool MyMap::Map::checkShip(std::vector<std::pair<int, int>> ship)
+bool Map::checkShip(std::vector<std::pair<int, int>> ship)
 {
 	if (ship.size() > 4 || ship.size() < 1)
 		return false;
@@ -210,7 +209,7 @@ bool MyMap::Map::checkShip(std::vector<std::pair<int, int>> ship)
 	return true;
 }
 
-MyMap::Map::~Map()
+Map::~Map()
 {
 	delete nums;
 	delete letters;

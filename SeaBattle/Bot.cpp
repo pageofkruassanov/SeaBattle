@@ -1,5 +1,14 @@
 #include "Bot.h"
 
+bool Bot::checkReservedMoves(std::pair<int, int> move)
+{
+	for (int i = 0; i < reservedMoves.size(); i++) {
+		if (reservedMoves[i] == move)
+			return false;
+	}
+	return true;
+}
+
 void Bot::setShips(Map& map, const int MAX_SIZE_SHIP)
 {
 	int amountTypeShips = 0;
@@ -52,4 +61,25 @@ void Bot::setShips(Map& map, const int MAX_SIZE_SHIP)
 		tempShip.clear();
 	}
 	map.RefreshBoard();
+}
+
+bool Bot::makeMove(Map& map)
+{
+	std::pair<int, int> move;
+	do {
+		move.first = 0 + rand() % (Map::getMapSize() - 1 - 0 + 1);
+		move.second = 0 + rand() % (Map::getMapSize() - 1 - 0 + 1);
+	} while (checkReservedMoves(move));
+	if (map.getBoard()[move.first][move.second] == ' ') {
+		map.getBoard()[move.first][move.second] = '*';
+		pastMoves.push_back(move);
+		return false;
+	}
+	else if (map.getBoard()[move.first][move.second] == 'B') {
+		map.getBoard()[move.first][move.second] = 'X';
+		pastMoves.push_back(move);
+		hitShots.push_back(move);
+		points += 10;
+		return true;
+	}
 }

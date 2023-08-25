@@ -2,14 +2,7 @@
 #include <vector>
 #include <iostream>
 #include <Windows.h>
-//#include <utility> 
 
-//enum boardData {
-//	_F,    // free place
-//	_R,    // reserved place
-//};
-
-namespace MyMap {
 	class Map
 	{
 		int coordX, coordY; // map point coordinates
@@ -51,5 +44,4 @@ namespace MyMap {
 		bool checkShip(std::vector<std::pair<int, int>> ship);
 		~Map();
 	};
-}
 
